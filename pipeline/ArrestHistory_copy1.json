@@ -289,7 +289,6 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[metadata].[sp_insert_control_file_load]",
 								"storedProcedureParameters": {
 									"converted_to_json": {
 										"value": "True",
@@ -324,7 +323,7 @@
 								}
 							},
 							"linkedServiceName": {
-								"referenceName": "synapsepoc1321-WorkspaceDefaultSqlServer",
+								"referenceName": "synapsepoc1230-WorkspaceDefaultSqlServer",
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"DBName": "mydedicatedsqlpool"
@@ -351,7 +350,6 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[metadata].[sp_update_control_file_load]",
 								"storedProcedureParameters": {
 									"file_name": {
 										"value": {
@@ -375,7 +373,7 @@
 								}
 							},
 							"linkedServiceName": {
-								"referenceName": "synapsepoc1321-WorkspaceDefaultSqlServer",
+								"referenceName": "synapsepoc1230-WorkspaceDefaultSqlServer",
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"DBName": "mydedicatedsqlpool"
