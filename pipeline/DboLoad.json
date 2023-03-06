@@ -83,13 +83,14 @@
 							"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
-						"folderPath": "myfilesystem/Staging"
+						"folderPath": "mydatalakestorage/Staging"
 					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine"
+					"traceLevel": "Fine",
+					"sourceStagingConcurrency": 1
 				}
 			},
 			{
@@ -158,13 +159,14 @@
 							"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
-						"folderPath": "myfilesystem/Staging"
+						"folderPath": "mydatalakestorage/Staging"
 					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine"
+					"traceLevel": "Fine",
+					"sourceStagingConcurrency": 1
 				}
 			},
 			{
@@ -248,13 +250,14 @@
 							"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
-						"folderPath": "myfilesystem/Staging"
+						"folderPath": "mydatalakestorage/Staging"
 					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine"
+					"traceLevel": "Fine",
+					"sourceStagingConcurrency": 1
 				}
 			},
 			{

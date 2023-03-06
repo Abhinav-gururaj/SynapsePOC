@@ -191,7 +191,7 @@
 							"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
-						"folderPath": "myfilesystem/Staging"
+						"folderPath": "mydatalakestorage/Staging"
 					},
 					"compute": {
 						"coreCount": 8,

@@ -50,7 +50,7 @@
 							"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
-						"path": "myfilesystem/Staging"
+						"path": "mydatalakestorage/Staging"
 					},
 					"translator": {
 						"type": "TabularTranslator",
