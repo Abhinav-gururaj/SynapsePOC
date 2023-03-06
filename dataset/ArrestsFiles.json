@@ -2,7 +2,7 @@
 	"name": "ArrestsFiles",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -20,7 +20,7 @@
 					"value": "@concat('Arrests/Arrests_', dataset().LoadType)",
 					"type": "Expression"
 				},
-				"fileSystem": "myfilesystem"
+				"fileSystem": "mydatalakestorage"
 			}
 		}
 	},

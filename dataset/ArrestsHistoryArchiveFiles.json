@@ -2,7 +2,7 @@
 	"name": "ArrestsHistoryArchiveFiles",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"folderPath": "Archive/Arrests/Arrests_History",
-				"fileSystem": "myfilesystem"
+				"fileSystem": "mydatalakestorage"
 			}
 		}
 	},

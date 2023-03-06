@@ -2,7 +2,7 @@
 	"name": "CrimesJson",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -19,7 +19,7 @@
 					"value": "@dataset().Folder",
 					"type": "Expression"
 				},
-				"fileSystem": "myfilesystem"
+				"fileSystem": "mydatalakestorage"
 			}
 		},
 		"schema": {

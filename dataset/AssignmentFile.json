@@ -2,7 +2,7 @@
 	"name": "AssignmentFile",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -12,7 +12,7 @@
 				"type": "AzureBlobFSLocation",
 				"fileName": "Data Engineer Assignment Test Set.csv",
 				"folderPath": "SB_Assignment/history",
-				"fileSystem": "myfilesystem"
+				"fileSystem": "mydatalakestorage"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

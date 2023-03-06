@@ -2,7 +2,7 @@
 	"name": "AssignmentParquet",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileSystem": "myfilesystem"
+				"fileSystem": "mydatalakestorage"
 			},
 			"compressionCodec": "snappy"
 		},
