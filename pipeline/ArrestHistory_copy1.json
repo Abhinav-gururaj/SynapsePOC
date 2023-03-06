@@ -401,7 +401,6 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[metadata].[sp_update_control_file_load]",
 								"storedProcedureParameters": {
 									"file_name": {
 										"value": {
@@ -425,7 +424,7 @@
 								}
 							},
 							"linkedServiceName": {
-								"referenceName": "synapsepoc1321-WorkspaceDefaultSqlServer",
+								"referenceName": "synapsepoc1230-WorkspaceDefaultSqlServer",
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"DBName": "mydedicatedsqlpool"
