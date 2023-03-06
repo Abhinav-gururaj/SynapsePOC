@@ -1,0 +1,218 @@
+{
+	"name": "PopulatingBridgeTables",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "Arrests"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "ChargeDetails"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "Crimes"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "CrimeReportSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "FBI"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "Charges"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "CrimeReport"
+				}
+			],
+			"transformations": [
+				{
+					"name": "InnerJoinArrestsAndChargeDetails"
+				},
+				{
+					"name": "LeftJoin"
+				},
+				{
+					"name": "FilterNotNulls"
+				},
+				{
+					"name": "InnerJoin"
+				},
+				{
+					"name": "RemoveDuplicates"
+				},
+				{
+					"name": "RemoveDuplicatesCharges"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id as long,",
+				"          CB_NO as long,",
+				"          CASE_NUMBER as string,",
+				"          ARREST_DATE as timestamp,",
+				"          RACE as string,",
+				"          CHARGES_STATUTE as string,",
+				"          CHARGES_DESCRIPTION as string,",
+				"          CHARGES_TYPE as string,",
+				"          CHARGES_CLASS as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> Arrests",
+				"source(output(",
+				"          ID as integer,",
+				"          ChargeStatute as string,",
+				"          ChargeDescription as string,",
+				"          ChargeType as string,",
+				"          ChargeClass as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> ChargeDetails",
+				"source(output(",
+				"          id as long,",
+				"          {CASE NUMBER} as string,",
+				"          DATE as timestamp,",
+				"          Block as string,",
+				"          IUCR as string,",
+				"          {Primary Type} as string,",
+				"          Description as string,",
+				"          {Location Description} as string,",
+				"          Arrest as boolean,",
+				"          Domestic as boolean,",
+				"          Beat as string,",
+				"          District as string,",
+				"          Ward as integer,",
+				"          {Community Area} as integer,",
+				"          {FBI Code} as string,",
+				"          {X Coordinate} as string,",
+				"          {Y Coordinate} as string,",
+				"          Year as integer,",
+				"          {Updated On} as timestamp,",
+				"          Latitude as string,",
+				"          Longitude as string,",
+				"          Location as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> Crimes",
+				"source(output(",
+				"          ID as integer,",
+				"          IUCR as string,",
+				"          FBIID as integer,",
+				"          Description as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> CrimeReportSource",
+				"source(output(",
+				"          ID as integer,",
+				"          PrimaryType as string,",
+				"          FBICode as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> FBI",
+				"Arrests, ChargeDetails join(CHARGES_STATUTE == ChargeStatute,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> InnerJoinArrestsAndChargeDetails",
+				"Crimes, CrimeReportSource join(Crimes@IUCR == CrimeReportSource@IUCR,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LeftJoin",
+				"LeftJoin filter(isNull(CrimeReportSource@IUCR)) ~> FilterNotNulls",
+				"FilterNotNulls, FBI join({Primary Type} == PrimaryType",
+				"     && {FBI Code} == FBICode,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> InnerJoin",
+				"InnerJoin aggregate(groupBy(Crimes@IUCR,",
+				"          Crimes@Description,",
+				"          FBI@ID),",
+				"     count = count({CASE NUMBER})) ~> RemoveDuplicates",
+				"InnerJoinArrestsAndChargeDetails aggregate(groupBy(CB_NO,",
+				"          ChargeDetails@ID),",
+				"     count = count(CASE_NUMBER)) ~> RemoveDuplicatesCharges",
+				"RemoveDuplicatesCharges sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CB_No = CB_NO,",
+				"          ChargeDetailID = ID",
+				"     )) ~> Charges",
+				"RemoveDuplicates sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          IUCR,",
+				"          Description,",
+				"          FBIID = ID",
+				"     )) ~> CrimeReport"
+			]
+		}
+	}
+}

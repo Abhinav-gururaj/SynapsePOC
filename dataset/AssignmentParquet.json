@@ -1,0 +1,20 @@
+{
+	"name": "AssignmentParquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "myfilesystem"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

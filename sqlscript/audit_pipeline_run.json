@@ -1,0 +1,17 @@
+{
+	"name": "audit_pipeline_run",
+	"properties": {
+		"content": {
+			"query": "DROP TABLE [metadata].[audit_pipeline_run]\nGO\n\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\n\nCREATE TABLE [metadata].[audit_pipeline_run]\n( \n\t[id] [bigint]  NOT NULL,\n\t[pipeline_run_id] [varchar](40)  NOT NULL,\n\t[pipeline_master_run_id] [varchar](40)  NOT NULL,\n\t[pipeline_name] [varchar](255)  NOT NULL,\n\t[pipeline_status] [varchar](40)  NOT NULL,\n\t[pipeline_entry_count] [int]  NOT NULL,\n\t[pipeline_start_datetime] [datetime]  NOT NULL,\n\t[pipeline_end_datetime] [datetime]  NULL,\n\t[md_insert_datetime] [datetime]  NOT NULL,\n\t[md_insert_user] [varchar](40)  NOT NULL,\n\t[md_update_datetime] [datetime]  NOT NULL,\n\t[md_update_user] [varchar](40)  NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "mydedicatedsqlpool",
+				"poolName": "mydedicatedsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

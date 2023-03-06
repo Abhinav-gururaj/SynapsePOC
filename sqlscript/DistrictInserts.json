@@ -1,0 +1,17 @@
+{
+	"name": "DistrictInserts",
+	"properties": {
+		"content": {
+			"query": "insert into dbo.District values(1,'Central',41.8803, -87.6236)\ninsert into dbo.District values(2,'Wentworth',41.758638,-87.630036)\ninsert into dbo.District values(3,'Grand Crossing',41.7657, -87.6153)\ninsert into dbo.District values(4,'South Chicago',41.7397,-87.5544)\ninsert into dbo.District values(5,'Calumet',41.7298,-87.5705)\ninsert into dbo.District values(6,'Gresham',41.7434,-87.6562)\ninsert into dbo.District values(7,'Englewood',41.7753,-87.6416)\ninsert into dbo.District values(8,'Chicago Lawn',41.7718,-87.6932)\ninsert into dbo.District values(9,'Deering',41.6737,-87.5753)\ninsert into dbo.District values(10,'Ogden',41.8796,-87.6679)\ninsert into dbo.District values(11,'Harrison',41.874961,-87.658113)\ninsert into dbo.District values(12,'Near West',41.8668,87.6664)\ninsert into dbo.District values(14,'Shakespeare',41.8914,-87.6054)\ninsert into dbo.District values(15,'Austin',41.8949,-87.7654)\ninsert into dbo.District values(16,'Jefferson Park',41.9825,-87.7704)\ninsert into dbo.District values(17,'Albany Park',41.9683,-87.7280)\ninsert into dbo.District values(18,'Near North',41.9039,-87.6315)\ninsert into dbo.District values(19,'Town Hall',41.8850,-87.7845)\ninsert into dbo.District values(20,'Foster',41.881832,-87.623177)\ninsert into dbo.District values(22,'Morgan Park',41.6875,-87.6692)\ninsert into dbo.District values(24,'Rogers Park',42.0126,-87.6746)\ninsert into dbo.District values(25,'Grand Central',41.927826,-87.652016)\ninsert into dbo.District values(31,'Crossing',41.927826,-87.752016)",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "mydedicatedsqlpool",
+				"poolName": "mydedicatedsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

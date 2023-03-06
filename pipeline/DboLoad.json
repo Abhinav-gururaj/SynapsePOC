@@ -1,0 +1,343 @@
+{
+	"name": "DboLoad",
+	"properties": {
+		"activities": [
+			{
+				"name": "LoadDimensions",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "pl_start",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "LoadDimensions",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"SrcCrimes": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "stage",
+								"table": "Crimes"
+							},
+							"SrcFBI": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "FBI"
+							},
+							"SrcDistrict": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "District"
+							},
+							"SrcArrests": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "stage",
+								"table": "Arrests"
+							},
+							"SrcRace": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Race"
+							},
+							"SrcChargeDetails": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "ChargeDetails"
+							},
+							"TgtFBI": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "FBI"
+							},
+							"TgtDistrict": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "District"
+							},
+							"TgtRace": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Race"
+							},
+							"TgtChargeDetails": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "ChargeDetails"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "myfilesystem/Staging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"sourceStagingConcurrency": 1
+				}
+			},
+			{
+				"name": "LoadBridges",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "LoadDimensions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "PopulatingBridgeTables",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"Arrests": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "Stage",
+								"table": "Arrests"
+							},
+							"ChargeDetails": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "ChargeDetails"
+							},
+							"Crimes": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "Stage",
+								"table": "Crimes"
+							},
+							"CrimeReportSource": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "CrimeReport"
+							},
+							"FBI": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "FBI"
+							},
+							"Charges": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Charges"
+							},
+							"CrimeReport": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "CrimeReport"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "myfilesystem/Staging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"sourceStagingConcurrency": 1
+				}
+			},
+			{
+				"name": "LoadFacts",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "LoadBridges",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "LoadFacts",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"SrcCrimes": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "Stage",
+								"table": "Crimes"
+							},
+							"SrcFctCrimes": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Crimes"
+							},
+							"SrcCrimeReport": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "CrimeReport"
+							},
+							"SrcArrests": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "Stage",
+								"table": "Arrests"
+							},
+							"SrcFctArrests": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Arrests"
+							},
+							"SrcRace": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Race"
+							},
+							"UpdFctCrimes": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Crimes"
+							},
+							"InsFctCrimes": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Crimes"
+							},
+							"InsFctArrests": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Arrests"
+							},
+							"UpdFctArrests": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "dbo",
+								"table": "Arrests"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "myfilesystem/Staging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"sourceStagingConcurrency": 1
+				}
+			},
+			{
+				"name": "pl_start",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_start",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "pl_complete",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "LoadFacts",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_end",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "pl_failed",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "LoadFacts",
+						"dependencyConditions": [
+							"Skipped",
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_failed",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "SynapsePOC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-02-22T07:02:48Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

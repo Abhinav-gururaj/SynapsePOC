@@ -1,0 +1,17 @@
+{
+	"name": "dboCrimes",
+	"properties": {
+		"content": {
+			"query": "DROP TABLE [dbo].[Crimes]\nGO\n\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\n\nCREATE TABLE [dbo].[Crimes]\n( \n\t[ID] [int]  NULL,\n\t[CaseNumber] [varchar](15)  NULL,\n\t[Date] [date]  NULL,\n\t[Year] [int]  NULL,\n\t[CrimeReportID] [int]  NULL,\n\t[LocationDescription] [varchar](300)  NULL,\n\t[Arrest] [bit]  NULL,\n\t[DistrictID] [int]  NULL,\n\t[UpdatedOn] [datetime]  NULL,\n\t[RowInsertDate] [date]  NULL,\n\t[RowUpdateDate] [date]  NULL\n)\nWITH\n(\n\tDISTRIBUTION = HASH ( [Year] ),\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "mydedicatedsqlpool",
+				"poolName": "mydedicatedsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

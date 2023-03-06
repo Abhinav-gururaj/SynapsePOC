@@ -1,0 +1,154 @@
+{
+	"name": "pl_ingestion_crimes_incremental",
+	"properties": {
+		"activities": [
+			{
+				"name": "pl_start",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_start",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "pl_complete",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "azf_synapse_poc_function",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_end",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "pl_failed",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "azf_synapse_poc_function",
+						"dependencyConditions": [
+							"Failed",
+							"Skipped"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_failed",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Lkp_get_max_update_on_date",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "pl_start",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "select max(updatedon) as max_update_date from crimes",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"DBName": "mydedicatedsqlpool",
+							"schema": "dbo",
+							"table": "crimes"
+						}
+					}
+				}
+			},
+			{
+				"name": "azf_synapse_poc_function",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [
+					{
+						"activity": "Lkp_get_max_update_on_date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "synapse_poc_function",
+					"method": "POST",
+					"body": {
+						"value": "{\"end_point_name\":\"crimes_history\",\"start_datetime\":\"\",\"year\":\"@{activity('Lkp_get_max_update_on_date').output.max_update_date}\"}",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureFunction1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "SynapsePOC/Ingestion Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-02-22T07:03:04Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

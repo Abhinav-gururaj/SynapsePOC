@@ -1,0 +1,89 @@
+{
+	"name": "mpl_ingestion_incremental",
+	"properties": {
+		"activities": [
+			{
+				"name": "pl_ingestion_crimes_incremental",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_ingestion_crimes_incremental",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "pl_ingestion_arrests_incremental",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "pl_ingestion_crimes_incremental",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_ingestion_arrests_incremental",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "pl_Load_dbo_tables",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "pl_Load_crimes_stage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DboLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "pl_Load_crimes_stage",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "pl_ingestion_arrests_incremental",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Crimes",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"LoadType": "Incremental"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "SynapsePOC/Ingestion Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-02-27T08:40:12Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

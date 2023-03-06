@@ -1,0 +1,17 @@
+{
+	"name": "sp_truncate_table",
+	"properties": {
+		"content": {
+			"query": "SET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\n\nCREATE OR ALTER PROC [metadata].[sp_truncate_table] @table_name NVARCHAR(50)\nAS\nBEGIN\n\nDECLARE @SQL NVARCHAR(1000)\nSET @SQL = 'TRUNCATE TABLE '+ @table_name\n \nEXEC (@SQL)\n\nEND",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "mydedicatedsqlpool",
+				"poolName": "mydedicatedsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,334 @@
+{
+	"name": "LoadDimensions",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcCrimes"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcFBI"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcDistrict"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcArrests"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcRace"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcChargeDetails"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "TgtFBI"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "TgtDistrict"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "TgtRace"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "TgtChargeDetails"
+				}
+			],
+			"transformations": [
+				{
+					"name": "LftJnFBI"
+				},
+				{
+					"name": "FtNwRcrdsFBI"
+				},
+				{
+					"name": "LftJnDistrict"
+				},
+				{
+					"name": "FtNwRcrdsDistrict"
+				},
+				{
+					"name": "SlctDistrictCol"
+				},
+				{
+					"name": "SlctFBICol"
+				},
+				{
+					"name": "LftJnRace"
+				},
+				{
+					"name": "FtNwRcrdsRace"
+				},
+				{
+					"name": "LftJnChargeDetails"
+				},
+				{
+					"name": "FTNwRcrdsChargeDetails"
+				},
+				{
+					"name": "DstntFBIRecords"
+				},
+				{
+					"name": "DstntDistrictRecords"
+				},
+				{
+					"name": "DstntChargeDetailsRecords"
+				},
+				{
+					"name": "DstntRaceRecords"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id as long,",
+				"          {CASE NUMBER} as string,",
+				"          DATE as timestamp,",
+				"          Block as string,",
+				"          IUCR as string,",
+				"          {Primary Type} as string,",
+				"          Description as string,",
+				"          {Location Description} as string,",
+				"          Arrest as boolean,",
+				"          Domestic as boolean,",
+				"          Beat as string,",
+				"          District as integer,",
+				"          Ward as integer,",
+				"          {Community Area} as integer,",
+				"          {FBI Code} as string,",
+				"          {X Coordinate} as string,",
+				"          {Y Coordinate} as string,",
+				"          Year as integer,",
+				"          {Updated On} as timestamp,",
+				"          Latitude as string,",
+				"          Longitude as string,",
+				"          Location as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcCrimes",
+				"source(output(",
+				"          PrimaryType as string,",
+				"          FBICode as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'select PrimaryType,FBICode from dbo.FBI',",
+				"     format: 'query',",
+				"     staged: true) ~> SrcFBI",
+				"source(output(",
+				"          ID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'Select ID from dbo.District',",
+				"     format: 'query',",
+				"     staged: false) ~> SrcDistrict",
+				"source(output(",
+				"          id as long,",
+				"          CB_NO as long,",
+				"          CASE_NUMBER as string,",
+				"          ARREST_DATE as timestamp,",
+				"          RACE as string,",
+				"          CHARGES_STATUTE as string,",
+				"          CHARGES_DESCRIPTION as string,",
+				"          CHARGES_TYPE as string,",
+				"          CHARGES_CLASS as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcArrests",
+				"source(output(",
+				"          ID as integer,",
+				"          Race as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcRace",
+				"source(output(",
+				"          ID as integer,",
+				"          ChargeStatute as string,",
+				"          ChargeDescription as string,",
+				"          ChargeType as string,",
+				"          ChargeClass as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcChargeDetails",
+				"SlctFBICol, SrcFBI join({Primary Type} == PrimaryType",
+				"     && {FBI Code} == FBICode,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LftJnFBI",
+				"LftJnFBI filter(isNull(PrimaryType)) ~> FtNwRcrdsFBI",
+				"SlctDistrictCol, SrcDistrict join(District == ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LftJnDistrict",
+				"LftJnDistrict filter(isNull(ID)) ~> FtNwRcrdsDistrict",
+				"SrcCrimes select(mapColumn(",
+				"          District,",
+				"          Latitude,",
+				"          Longitude",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SlctDistrictCol",
+				"SrcCrimes select(mapColumn(",
+				"          {Primary Type},",
+				"          {FBI Code}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SlctFBICol",
+				"SrcArrests, SrcRace join(SrcArrests@RACE == SrcRace@Race,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LftJnRace",
+				"LftJnRace filter(isNull(SrcRace@Race)) ~> FtNwRcrdsRace",
+				"SrcArrests, SrcChargeDetails join(CHARGES_STATUTE == ChargeStatute",
+				"     && CHARGES_DESCRIPTION == ChargeDescription",
+				"     && CHARGES_TYPE == ChargeType",
+				"     && CHARGES_CLASS == ChargeClass,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LftJnChargeDetails",
+				"LftJnChargeDetails filter(isNull(ChargeStatute)) ~> FTNwRcrdsChargeDetails",
+				"FtNwRcrdsFBI aggregate(groupBy({Primary Type},",
+				"          {FBI Code}),",
+				"     count = count({Primary Type})) ~> DstntFBIRecords",
+				"FtNwRcrdsDistrict aggregate(groupBy(District,",
+				"          Latitude,",
+				"          Longitude),",
+				"     count = count(ID)) ~> DstntDistrictRecords",
+				"FTNwRcrdsChargeDetails aggregate(groupBy(CHARGES_STATUTE,",
+				"          CHARGES_DESCRIPTION,",
+				"          CHARGES_TYPE,",
+				"          CHARGES_CLASS),",
+				"     count = count(SrcArrests@id)) ~> DstntChargeDetailsRecords",
+				"FtNwRcrdsRace aggregate(groupBy(SrcArrests@RACE),",
+				"     count = count(SrcArrests@id)) ~> DstntRaceRecords",
+				"DstntFBIRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          PrimaryType = {Primary Type},",
+				"          FBICode = {FBI Code}",
+				"     )) ~> TgtFBI",
+				"DstntDistrictRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ID = District,",
+				"          Latitude,",
+				"          Longitude",
+				"     )) ~> TgtDistrict",
+				"DstntRaceRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Race = RACE",
+				"     )) ~> TgtRace",
+				"DstntChargeDetailsRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ChargeStatute = CHARGES_STATUTE,",
+				"          ChargeDescription = CHARGES_DESCRIPTION,",
+				"          ChargeType = CHARGES_TYPE,",
+				"          ChargeClass = CHARGES_CLASS",
+				"     )) ~> TgtChargeDetails"
+			]
+		}
+	}
+}

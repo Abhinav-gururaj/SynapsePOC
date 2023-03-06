@@ -1,0 +1,17 @@
+{
+	"name": "sp_update_runtime_params",
+	"properties": {
+		"content": {
+			"query": "DROP PROCEDURE [metadata].[sp_update_runtime_params]\nGO\n\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\n\nCREATE PROC [metadata].[sp_update_runtime_params] @pipeline_name [VARCHAR](255),@runtime_param_value [VARCHAR](255),@md_update_user [VARCHAR](255) AS\nBEGIN\n    \n\tUPDATE [metadata].[control_runtime_params]\n\tSET [runtime_param_value] = @runtime_param_value,\n\t\t[md_update_user] = @md_update_user,\n\t\t[md_update_datetime] = GETDATE()\n\tWHERE [pipeline_name] = @pipeline_name\nEND\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "mydedicatedsqlpool",
+				"poolName": "mydedicatedsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

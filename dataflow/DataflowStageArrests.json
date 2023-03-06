@@ -1,0 +1,292 @@
+{
+	"name": "DataflowStageArrests",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ArrestsCSV",
+						"type": "DatasetReference"
+					},
+					"name": "Arrests"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "unpivot1"
+				},
+				{
+					"name": "statute"
+				},
+				{
+					"name": "description"
+				},
+				{
+					"name": "unpivot2"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "type"
+				},
+				{
+					"name": "unpivot3"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "class"
+				},
+				{
+					"name": "unpivot4"
+				},
+				{
+					"name": "derivedColumn4"
+				},
+				{
+					"name": "onemapping"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "join3"
+				},
+				{
+					"name": "select3"
+				},
+				{
+					"name": "join4"
+				},
+				{
+					"name": "select4"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     username as integer (-123)",
+				"}",
+				"source(output(",
+				"          CB_NO as string,",
+				"          {CASE NUMBER} as string,",
+				"          {ARREST DATE} as timestamp 'MM/dd/yyyy HH:mm:ss',",
+				"          RACE as string,",
+				"          {CHARGE 1 STATUTE} as string,",
+				"          {CHARGE 1 DESCRIPTION} as string,",
+				"          {CHARGE 1 TYPE} as string,",
+				"          {CHARGE 1 CLASS} as string,",
+				"          {CHARGE 2 STATUTE} as string,",
+				"          {CHARGE 2 DESCRIPTION} as string,",
+				"          {CHARGE 2 TYPE} as string,",
+				"          {CHARGE 2 CLASS} as string,",
+				"          {CHARGE 3 STATUTE} as string,",
+				"          {CHARGE 3 DESCRIPTION} as string,",
+				"          {CHARGE 3 TYPE} as string,",
+				"          {CHARGE 3 CLASS} as string,",
+				"          {CHARGE 4 STATUTE} as string,",
+				"          {CHARGE 4 DESCRIPTION} as string,",
+				"          {CHARGE 4 TYPE} as string,",
+				"          {CHARGE 4 CLASS} as string,",
+				"          {CHARGES STATUTE} as string,",
+				"          {CHARGES DESCRIPTION} as string,",
+				"          {CHARGES TYPE} as string,",
+				"          {CHARGES CLASS} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> Arrests",
+				"Arrests keyGenerate(output(Id as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"statute unpivot(output(",
+				"          {CHARGE STATUTE ORDER} as string,",
+				"          {CHARGE STATUTE} as string",
+				"     ),",
+				"     ungroupBy(Id),",
+				"     lateral: false,",
+				"     ignoreNullPivots: true) ~> unpivot1",
+				"surrogateKey1 select(mapColumn(",
+				"          Id,",
+				"          {CHARGE 1 STATUTE},",
+				"          {CHARGE 2 STATUTE},",
+				"          {CHARGE 3 STATUTE},",
+				"          {CHARGE 4 STATUTE}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> statute",
+				"surrogateKey1 select(mapColumn(",
+				"          Id,",
+				"          {CHARGE 1 DESCRIPTION},",
+				"          {CHARGE 2 DESCRIPTION},",
+				"          {CHARGE 3 DESCRIPTION},",
+				"          {CHARGE 4 DESCRIPTION}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> description",
+				"description unpivot(output(",
+				"          {CHARGE DESCRIPTION ORDER} as string,",
+				"          {CHARGE DESCRIPTION} as string",
+				"     ),",
+				"     ungroupBy(Id),",
+				"     lateral: false,",
+				"     ignoreNullPivots: true) ~> unpivot2",
+				"unpivot2 derive(CHARGEID = split({CHARGE DESCRIPTION ORDER}, ' ')[2]) ~> derivedColumn2",
+				"unpivot1 derive(CHARGEID = split({CHARGE STATUTE ORDER}, ' ')[2]) ~> derivedColumn1",
+				"surrogateKey1 select(mapColumn(",
+				"          Id,",
+				"          {CHARGE 1 TYPE},",
+				"          {CHARGE 2 TYPE},",
+				"          {CHARGE 3 TYPE},",
+				"          {CHARGE 4 TYPE}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> type",
+				"type unpivot(output(",
+				"          {CHARGE TYPE ORDER} as string,",
+				"          {CHARGE TYPE} as string",
+				"     ),",
+				"     ungroupBy(Id),",
+				"     lateral: false,",
+				"     ignoreNullPivots: true) ~> unpivot3",
+				"unpivot3 derive(CHARGEID = split({CHARGE TYPE ORDER}, ' ')[2]) ~> derivedColumn3",
+				"surrogateKey1 select(mapColumn(",
+				"          Id,",
+				"          {CHARGE 1 CLASS},",
+				"          {CHARGE 2 CLASS},",
+				"          {CHARGE 3 CLASS},",
+				"          {CHARGE 4 CLASS}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> class",
+				"class unpivot(output(",
+				"          {CHARGE CLASS ORDER} as string,",
+				"          {CHARGE CLASS} as string",
+				"     ),",
+				"     ungroupBy(Id),",
+				"     lateral: false,",
+				"     ignoreNullPivots: true) ~> unpivot4",
+				"unpivot4 derive(CHARGEID = split({CHARGE CLASS ORDER}, ' ')[2]) ~> derivedColumn4",
+				"surrogateKey1 select(mapColumn(",
+				"          Id,",
+				"          CB_NO,",
+				"          {CASE NUMBER},",
+				"          {ARREST DATE},",
+				"          RACE",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> onemapping",
+				"derivedColumn1, derivedColumn2 join(unpivot1@Id == unpivot2@Id",
+				"     && derivedColumn1@CHARGEID == derivedColumn2@CHARGEID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          Id = unpivot1@Id,",
+				"          CHARGEID = derivedColumn1@CHARGEID,",
+				"          {CHARGE STATUTE},",
+				"          {CHARGE DESCRIPTION}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1, derivedColumn3 join(select1@Id == unpivot3@Id",
+				"     && select1@CHARGEID == derivedColumn3@CHARGEID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 select(mapColumn(",
+				"          Id = select1@Id,",
+				"          CHARGEID = select1@CHARGEID,",
+				"          {CHARGE STATUTE},",
+				"          {CHARGE DESCRIPTION},",
+				"          {CHARGE TYPE}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2, derivedColumn4 join(select2@Id == unpivot4@Id",
+				"     && select2@CHARGEID == derivedColumn4@CHARGEID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join3",
+				"join3 select(mapColumn(",
+				"          Id = select2@Id,",
+				"          {CHARGE STATUTE},",
+				"          {CHARGE DESCRIPTION},",
+				"          {CHARGE TYPE},",
+				"          {CHARGE CLASS}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"select3, onemapping join(select3@Id == onemapping@Id,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join4",
+				"join4 select(mapColumn(",
+				"          CB_NO,",
+				"          {CASE NUMBER},",
+				"          {ARREST DATE},",
+				"          RACE,",
+				"          {CHARGE STATUTE},",
+				"          {CHARGE DESCRIPTION},",
+				"          {CHARGE TYPE},",
+				"          {CHARGE CLASS}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select4",
+				"select4 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CB_NO,",
+				"          CASE_NUMBER = {CASE NUMBER},",
+				"          ARREST_DATE = {ARREST DATE},",
+				"          RACE,",
+				"          CHARGES_STATUTE = {CHARGE STATUTE},",
+				"          CHARGES_DESCRIPTION = {CHARGE DESCRIPTION},",
+				"          CHARGES_TYPE = {CHARGE TYPE},",
+				"          CHARGES_CLASS = {CHARGE CLASS}",
+				"     ),",
+				"     preCommands: [],",
+				"     postCommands: []) ~> sink1"
+			]
+		}
+	}
+}

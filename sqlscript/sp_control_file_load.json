@@ -1,0 +1,17 @@
+{
+	"name": "sp_control_file_load",
+	"properties": {
+		"content": {
+			"query": "create proc metadata.sp_insert_control_file_load @file_name varchar(100),@file_type varchar(100),@source_type varchar(100)\n,@processed_to_staging bit,@md_insert_user varchar(100),@converted_to_json bit AS\ndeclare @date datetime=getdate()\ninsert into [metadata].[control_file_load] VALUES\n(@file_name,@file_type,@source_type,@processed_to_staging,'processing',@date,@md_insert_user,'1900-01-01','',@converted_to_json)\n\n\n\ncreate proc metadata.sp_update_control_file_load @file_name varchar(100),@processed_to_staging bit,@status_message varchar(100)\n,@md_update_user varchar(100) AS\ndeclare @date datetime=getdate()\nupdate [metadata].[control_file_load] SET md_update_user=@md_update_user,processed_to_staging=@processed_to_staging\n,status_message=@status_message,md_update_datetime=@date\nwhere file_name=@file_name",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "mydedicatedsqlpool",
+				"poolName": "mydedicatedsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

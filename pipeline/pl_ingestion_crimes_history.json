@@ -1,0 +1,146 @@
+{
+	"name": "pl_ingestion_crimes_history",
+	"properties": {
+		"activities": [
+			{
+				"name": "pl_start",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_start",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "-1",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "pl_end",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "for_each_history_year",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_end",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "-1",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "for_each_history_year",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "pl_start",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('years')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "azf_synapse_poc_function",
+							"type": "AzureFunctionActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"functionName": "synapse_poc_function",
+								"method": "POST",
+								"body": {
+									"value": "{\"end_point_name\":\"crimes_history\",\"start_datetime\":\"\",\"year\":\"@{item()}\"}",
+									"type": "Expression"
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "AzureFunction1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "pl_failed",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "for_each_history_year",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_failed",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "-1",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"variables": {
+			"years": {
+				"type": "Array",
+				"defaultValue": [
+					2014,
+					2015,
+					2016,
+					2017,
+					2018,
+					2019,
+					2020,
+					2021,
+					2022
+				]
+			}
+		},
+		"folder": {
+			"name": "SynapsePOC/Ingestion Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-02-22T07:02:57Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

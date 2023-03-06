@@ -1,0 +1,211 @@
+{
+	"name": "ArrestHistory",
+	"properties": {
+		"activities": [
+			{
+				"name": "StageArrests",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "pl_start",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DataflowStageArrests",
+						"type": "DataFlowReference",
+						"parameters": {
+							"username": "-123"
+						},
+						"datasetParameters": {
+							"Arrests": {
+								"LoadType": {
+									"value": "@pipeline().parameters.LoadType",
+									"type": "Expression"
+								}
+							},
+							"sink1": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "staging",
+								"table": "Arrests"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "myfilesystem/Staging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "pl_start",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_start",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "pl_complete",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ArchiveProcessedFiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_end",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "pl_failed",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ArchiveProcessedFiles",
+						"dependencyConditions": [
+							"Skipped",
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_failed",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "ArchiveProcessedFiles",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "StageArrests",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@Concat('Archive/Arrests/Arrests_', pipeline().parameters.LoadType)",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ArrestsCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"LoadType": {
+								"value": "@pipeline().parameters.LoadType",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CrimesJson",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@Concat('Archive/Arrests/Arrests_', pipeline().parameters.LoadType)",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"LoadType": {
+				"type": "string",
+				"defaultValue": "History"
+			}
+		},
+		"folder": {
+			"name": "SynapsePOC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-04T09:55:57Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

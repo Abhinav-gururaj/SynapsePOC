@@ -1,0 +1,17 @@
+{
+	"name": "StageCrimes",
+	"properties": {
+		"content": {
+			"query": "DROP TABLE [stage].[Crimes];\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\n\nCREATE TABLE [stage].[Crimes]\n( \n\t[id] [bigint]  IDENTITY (1,1) NOT NULL,\n\t[CASE NUMBER] [nvarchar](50),\n\t[DATE] [datetime],\n\t[Block] [varchar](50),\n\t[IUCR] [nvarchar](50),\n\t[Primary Type] [nvarchar](255),\n\t[Description] [nvarchar](4000),\n\t[Location Description] [nvarchar](4000),\n    [Arrest] [BIT],\n    [Domestic] [BIT],\n    [Beat] [varchar](20),\n    [District][varchar](20),\n    [Ward][int],\n    [Community Area] [bit],\n    [FBI Code][varchar](20),\n    [X Coordinate] [varchar] (255),\n    [Y Coordinate] [VARCHAR] (255),\n    [Year] [int],\n    [Updated On] [DATETIME],\n    [Latitude] [NVARCHAR] (255),\n    [Longitude] [NVARCHAR] (255),\n    [Location] [NVARCHAR](255),\n\t[md_insert_datetime] [datetime]  NOT NULL,\n\t[md_insert_user] [varchar](40)  NOT NULL,\n\t[md_update_datetime] [datetime]  NOT NULL,\n\t[md_update_user] [varchar](40)  NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "mydedicatedsqlpool",
+				"poolName": "mydedicatedsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "StageArrests",
+	"properties": {
+		"content": {
+			"query": "DROP TABLE [stage].[Arrets];\n\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\n\nCREATE TABLE [stage].[Arrests]\n( \n\t[id] [bigint]  IDENTITY(1,1) NOT NULL,\n\t[CB_NO] BIGINT,\n\t[CASE_NUMBER] [nvarchar](50),\n\t[ARREST_DATE] [datetime],\n\t[RACE] [varchar](50),\n\t[CHARGES_STATUTE] [nvarchar](255),\n\t[CHARGES_DESCRIPTION] [nvarchar](4000),\n\t[CHARGES_TYPE] [nvarchar](255),\n\t[CHARGES_CLASS] [nvarchar](255)\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "mydedicatedsqlpool",
+				"poolName": "mydedicatedsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

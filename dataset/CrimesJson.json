@@ -1,0 +1,109 @@
+{
+	"name": "CrimesJson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Folder": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().Folder",
+					"type": "Expression"
+				},
+				"fileSystem": "myfilesystem"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"case_number": {
+					"type": "string"
+				},
+				"date": {
+					"type": "string"
+				},
+				"block": {
+					"type": "string"
+				},
+				"iucr": {
+					"type": "string"
+				},
+				"primary_type": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"location_description": {
+					"type": "string"
+				},
+				"arrest": {
+					"type": "boolean"
+				},
+				"domestic": {
+					"type": "boolean"
+				},
+				"beat": {
+					"type": "string"
+				},
+				"district": {
+					"type": "string"
+				},
+				"ward": {
+					"type": "string"
+				},
+				"community_area": {
+					"type": "string"
+				},
+				"fbi_code": {
+					"type": "string"
+				},
+				"x_coordinate": {
+					"type": "string"
+				},
+				"y_coordinate": {
+					"type": "string"
+				},
+				"year": {
+					"type": "string"
+				},
+				"updated_on": {
+					"type": "string"
+				},
+				"latitude": {
+					"type": "string"
+				},
+				"longitude": {
+					"type": "string"
+				},
+				"location": {
+					"type": "object",
+					"properties": {
+						"latitude": {
+							"type": "string"
+						},
+						"longitude": {
+							"type": "string"
+						},
+						"human_address": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

@@ -1,0 +1,479 @@
+{
+	"name": "Arrests",
+	"properties": {
+		"activities": [
+			{
+				"name": "pl_complete",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ArchiveProcessedFiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_end",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "pl_failed",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ArchiveProcessedFiles",
+						"dependencyConditions": [
+							"Skipped",
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_failed",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "pl_start",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_start",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_pipeline_master_run_id": {
+							"value": "@pipeline()?.TriggeredByPipelineRunId",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "ArchiveProcessedFiles",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "CSVToStage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@Concat('Archive/Arrests/Arrests_', pipeline().parameters.LoadType)",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ArrestsCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"LoadType": {
+								"value": "@pipeline().parameters.LoadType",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CrimesJson",
+						"type": "DatasetReference",
+						"parameters": {
+							"Folder": {
+								"value": "@Concat('Archive/Arrests/Arrests_', pipeline().parameters.LoadType)",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "CSVToStage",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "JsonToCSV",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DataflowStageArrests",
+						"type": "DataFlowReference",
+						"parameters": {
+							"username": "-123"
+						},
+						"datasetParameters": {
+							"Arrests": {
+								"LoadType": {
+									"value": "@pipeline().parameters.LoadType",
+									"type": "Expression"
+								}
+							},
+							"sink1": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "stage",
+								"table": "Arrests"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "myfilesystem/Staging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "JsonToCSV",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "pl_start",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@Concat('Archive/Arrests/Arrests_', pipeline().parameters.LoadType)",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['cb_no']"
+								},
+								"sink": {
+									"name": "CB_NO"
+								}
+							},
+							{
+								"source": {
+									"path": "$['case_number']"
+								},
+								"sink": {
+									"name": "CASE NUMBER"
+								}
+							},
+							{
+								"source": {
+									"path": "$['arrest_date']"
+								},
+								"sink": {
+									"name": "ARREST DATE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['race']"
+								},
+								"sink": {
+									"name": "RACE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_1_statute']"
+								},
+								"sink": {
+									"name": "CHARGE 1 STATUTE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_1_description']"
+								},
+								"sink": {
+									"name": "CHARGE 1 DESCRIPTION"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_1_type']"
+								},
+								"sink": {
+									"name": "CHARGE 1 TYPE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_1_class']"
+								},
+								"sink": {
+									"name": "CHARGE 1 CLASS"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_2_statute']"
+								},
+								"sink": {
+									"name": "CHARGE 2 STATUTE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_2_description']"
+								},
+								"sink": {
+									"name": "charge_2_description"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_2_type']"
+								},
+								"sink": {
+									"name": "CHARGE 2 TYPE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_2_class']"
+								},
+								"sink": {
+									"name": "CHARGE 2 CLASS"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_3_statute']"
+								},
+								"sink": {
+									"name": "CHARGE 3 STATUTE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_3_description']"
+								},
+								"sink": {
+									"name": "CHARGE 3 DESCRIPTION"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_3_type']"
+								},
+								"sink": {
+									"name": "CHARGE 3 TYPE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_3_class']"
+								},
+								"sink": {
+									"name": "CHARGE 3 CLASS"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_4_statute']"
+								},
+								"sink": {
+									"name": "CHARGE 4 STATUTE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_4_description']"
+								},
+								"sink": {
+									"name": "CHARGE 4 DESCRIPTION"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_4_type']"
+								},
+								"sink": {
+									"name": "CHARGE 4 TYPE"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charge_4_class']"
+								},
+								"sink": {
+									"name": "CHARGE 4 CLASS"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charges_statute']"
+								},
+								"sink": {
+									"name": "charges_statute"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charges_description']"
+								},
+								"sink": {
+									"name": "charges_description"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charges_type']"
+								},
+								"sink": {
+									"name": "charges_type"
+								}
+							},
+							{
+								"source": {
+									"path": "$['charges_class']"
+								},
+								"sink": {
+									"name": "charges_class"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ArrestsJson",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ArrestsCSV",
+						"type": "DatasetReference",
+						"parameters": {
+							"LoadType": "Incremental"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"LoadType": {
+				"type": "string",
+				"defaultValue": "History"
+			}
+		},
+		"folder": {
+			"name": "SynapsePOC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-02-27T10:43:30Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

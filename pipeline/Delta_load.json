@@ -1,0 +1,466 @@
+{
+	"name": "Delta_load",
+	"properties": {
+		"activities": [
+			{
+				"name": "On-prem_to_stage",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "get_last_runtime_value",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "set_current_date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"parallelCopies": 32,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "AssignmentFile",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AssignmentParquet1",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_path": {
+								"value": "@concat('SB_Assignment/Daily/',variables('current_date'),'/Transaction')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Complete_log",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "update_last_runtime_value",
+						"dependencyConditions": [
+							"Skipped",
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "synapsepoc1321-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "mydedicatedsqlpool"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "date",
+									"type": "Datetime",
+									"value": {
+										"value": "@utcNow()",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								},
+								{
+									"name": "user",
+									"type": "String",
+									"value": "Synapse",
+									"direction": "Input"
+								},
+								{
+									"name": "run_id",
+									"type": "String",
+									"value": {
+										"value": "@pipeline().RunId",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								},
+								{
+									"name": "error",
+									"type": "String",
+									"value": {
+										"value": "@coalesce(activity('On-prem_to_stage')?.error?.Message,activity('Stage_to_DWH')?.error?.Message)",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "update Assign.logging set completion_date=@date,error_description=@error,Row_update_date=@date,updated_by=@user where pipeline_run_id=@run_id"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create_log",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "synapsepoc1321-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "mydedicatedsqlpool"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "pipeline_name",
+									"type": "String",
+									"value": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								},
+								{
+									"name": "run_id",
+									"type": "String",
+									"value": {
+										"value": "@pipeline().RunId",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								},
+								{
+									"name": "date",
+									"type": "Datetime",
+									"value": {
+										"value": "@utcnow()",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								},
+								{
+									"name": "user",
+									"type": "String",
+									"value": "Synapse",
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "insert into Assign.logging(pipeline_name,pipeline_run_id,run_start_time,row_insert_date,created_by) values(@pipeline_name,@run_id,@date,@date,@user)"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "get_last_runtime_value",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create_log",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "synapsepoc1321-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "mydedicatedsqlpool"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "select max(Last_Runtime_Value) as Last_Runtime_value from Assign.Runtime_param"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Update_Staging_date",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "On-prem_to_stage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "synapsepoc1321-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "mydedicatedsqlpool"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "date",
+									"type": "Datetime",
+									"value": {
+										"value": "@utcNow()",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								},
+								{
+									"name": "user",
+									"type": "String",
+									"value": "Synapse",
+									"direction": "Input"
+								},
+								{
+									"name": "run_id",
+									"type": "String",
+									"value": {
+										"value": "@pipeline().RunId",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "update Assign.logging set stage_date=@date,Row_update_date=@date,updated_by=@user where pipeline_run_id=@run_id"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "update_last_runtime_value",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Stage_to_DWH",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "synapsepoc1321-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "mydedicatedSqlpool"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "date",
+									"type": "Datetime",
+									"value": {
+										"value": "@utcNow()",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								},
+								{
+									"name": "user",
+									"type": "String",
+									"value": "Synapse",
+									"direction": "Input"
+								},
+								{
+									"name": "pipeline_name",
+									"type": "String",
+									"value": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "NonQuery",
+							"text": "update [Assign].[Runtime_param] set last_runtime_value=@date,Row_update_date=@date,Updated_by=@user where pipeline_name=@pipeline_name"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "set_current_date",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Create_log",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current_date",
+					"value": {
+						"value": "@formatDateTime(utcnow(),'yyyy/MM/dd')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Stage_to_DWH",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "Update_Staging_date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "Stage_to_DWH",
+						"type": "DataFlowReference",
+						"parameters": {
+							"date": {
+								"value": "'@{variables('current_date')}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"SrcSynapse": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "Assign",
+								"table": "Transaction"
+							},
+							"TgtSynapse": {
+								"DBName": "mydedicatedsqlpool",
+								"schema": "Assign",
+								"table": "Transaction"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "myfilesystem/Staging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"variables": {
+			"current_date": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Assignment"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-02-27T07:02:19Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

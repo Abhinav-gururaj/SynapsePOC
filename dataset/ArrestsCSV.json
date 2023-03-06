@@ -1,0 +1,130 @@
+{
+	"name": "ArrestsCSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"LoadType": {
+				"type": "String",
+				"defaultValue": "History"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat(string('Arrests/Arrests_'), dataset().LoadType)",
+					"type": "Expression"
+				},
+				"fileSystem": "myfilesystem"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CB_NO",
+				"type": "String"
+			},
+			{
+				"name": "CASE NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "ARREST DATE",
+				"type": "String"
+			},
+			{
+				"name": "RACE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 1 STATUTE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 1 DESCRIPTION",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 1 TYPE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 1 CLASS",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 2 STATUTE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 2 DESCRIPTION",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 2 TYPE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 2 CLASS",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 3 STATUTE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 3 DESCRIPTION",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 3 TYPE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 3 CLASS",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 4 STATUTE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 4 DESCRIPTION",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 4 TYPE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGE 4 CLASS",
+				"type": "String"
+			},
+			{
+				"name": "CHARGES STATUTE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGES DESCRIPTION",
+				"type": "String"
+			},
+			{
+				"name": "CHARGES TYPE",
+				"type": "String"
+			},
+			{
+				"name": "CHARGES CLASS",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

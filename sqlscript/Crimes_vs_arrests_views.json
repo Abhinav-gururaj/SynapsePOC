@@ -1,0 +1,17 @@
+{
+	"name": "Crimes_vs_arrests_views",
+	"properties": {
+		"content": {
+			"query": "--Visual one\ncreate view arrests_and_crimes_yearly as\nselect coalesce(a.year,b.year) as year, arrest_count,crime_count from \n(select year,count(*) as arrest_count from arrests group by year) a\nfull outer join\n(select year,count(*) as crime_count from crimes group by year) b\non a.year=b.YEAR\n\nGO\n\ncreate view arrests_and_crimes_monthly AS\nselect coalesce(a.year,b.year) as year, coalesce(a.month,b.month) as month, a.arrest_count,b.crime_count from \n(select year,datename(month,ArrestDate) as month,count(*) as arrest_count from arrests group by year,datename(month,arrestdate))a\nfull outer join\n(select year,datename(month,Date) as month,count(*) as crime_count from Crimes group by year,datename(month,date))b\non a.month=b.month and a.year=b.year\n\nGO\n\ncreate view arrests_and_crimes_weekday AS\nselect coalesce(a.year,b.year) as year, coalesce(a.weekday,b.weekday) as weekday, a.arrest_count,b.crime_count from \n(select year,datename(w,ArrestDate) as weekday,count(*) as arrest_count from arrests group by year,datename(w,arrestdate))a\nfull outer join\n(select year,datename(w,Date) as weekday,count(*) as crime_count from Crimes group by year,datename(w,date))b\non a.weekday=b.weekday and a.year=b.year\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "mydedicatedsqlpool",
+				"poolName": "mydedicatedsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

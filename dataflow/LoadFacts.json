@@ -1,0 +1,398 @@
+{
+	"name": "LoadFacts",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcCrimes"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcFctCrimes"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcCrimeReport"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcArrests"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcFctArrests"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "SrcRace"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "UpdFctCrimes"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "InsFctCrimes"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "InsFctArrests"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "UpdFctArrests"
+				}
+			],
+			"transformations": [
+				{
+					"name": "LftJnFctCrimes"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "UpdRecords"
+				},
+				{
+					"name": "DrCrimesMd"
+				},
+				{
+					"name": "slcFctCrimes"
+				},
+				{
+					"name": "InnJnCrimeReport"
+				},
+				{
+					"name": "SlcCrimes"
+				},
+				{
+					"name": "DrMetadataColumns"
+				},
+				{
+					"name": "InnJnRace"
+				},
+				{
+					"name": "SlcArrests"
+				},
+				{
+					"name": "LftJnFctArrests"
+				},
+				{
+					"name": "DrArrestsMd"
+				},
+				{
+					"name": "SlcFctArrests"
+				},
+				{
+					"name": "DrYear"
+				},
+				{
+					"name": "split2"
+				},
+				{
+					"name": "UpdRcrds"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id as long,",
+				"          {CASE NUMBER} as string,",
+				"          DATE as timestamp,",
+				"          Block as string,",
+				"          IUCR as string,",
+				"          {Primary Type} as string,",
+				"          Description as string,",
+				"          {Location Description} as string,",
+				"          Arrest as boolean,",
+				"          Domestic as boolean,",
+				"          Beat as string,",
+				"          District as string,",
+				"          Ward as integer,",
+				"          {Community Area} as integer,",
+				"          {FBI Code} as string,",
+				"          {X Coordinate} as string,",
+				"          {Y Coordinate} as string,",
+				"          Year as integer,",
+				"          {Updated On} as timestamp,",
+				"          Latitude as string,",
+				"          Longitude as string,",
+				"          Location as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcCrimes",
+				"source(output(",
+				"          ID as integer,",
+				"          CaseNumber as string,",
+				"          Date as date,",
+				"          Year as short,",
+				"          CrimeReportID as integer,",
+				"          LocationDescription as string,",
+				"          Arrest as boolean,",
+				"          DistrictID as integer,",
+				"          UpdatedOn as date,",
+				"          RowInsertDate as date,",
+				"          RowUpdateDate as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcFctCrimes",
+				"source(output(",
+				"          ID as integer,",
+				"          IUCR as string,",
+				"          FBIID as integer,",
+				"          Description as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcCrimeReport",
+				"source(output(",
+				"          id as long,",
+				"          CB_NO as long,",
+				"          CASE_NUMBER as string,",
+				"          ARREST_DATE as timestamp,",
+				"          RACE as string,",
+				"          CHARGES_STATUTE as string,",
+				"          CHARGES_DESCRIPTION as string,",
+				"          CHARGES_TYPE as string,",
+				"          CHARGES_CLASS as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcArrests",
+				"source(output(",
+				"          ID as integer,",
+				"          CaseNumber as string,",
+				"          CB_No as integer,",
+				"          ArrestDate as date,",
+				"          Year as short,",
+				"          RaceID as integer,",
+				"          RowInsertDate as date,",
+				"          RowUpdateDate as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcFctArrests",
+				"source(output(",
+				"          ID as integer,",
+				"          Race as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> SrcRace",
+				"SlcCrimes, slcFctCrimes join(SlcCrimes@id == slcFctCrimes@ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LftJnFctCrimes",
+				"DrMetadataColumns split(isNull(slcFctCrimes@ID),",
+				"     disjoint: false) ~> split1@(NwRcrds, ExistRcrds)",
+				"split1@ExistRcrds alterRow(upsertIf({md5}==md5(toString(split1@ExistRcrds@id)+{CASE NUMBER}+toString(DATE)+toString(CrimeReportID)+{Location Description}+toString(Arrest)+toString(District)))) ~> UpdRecords",
+				"SrcFctCrimes derive(md5 = md5(toString(ID)+CaseNumber+toString(Date)+toString(CrimeReportID)+LocationDescription+toString(Arrest)+toString(DistrictID))) ~> DrCrimesMd",
+				"DrCrimesMd select(mapColumn(",
+				"          ID,",
+				"          md5",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> slcFctCrimes",
+				"SrcCrimes, SrcCrimeReport join(SrcCrimes@IUCR == SrcCrimeReport@IUCR,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> InnJnCrimeReport",
+				"InnJnCrimeReport select(mapColumn(",
+				"          id = SrcCrimes@id,",
+				"          {CASE NUMBER},",
+				"          DATE,",
+				"          Arrest,",
+				"          {Location Description},",
+				"          District,",
+				"          Year,",
+				"          {Updated On},",
+				"          CrimeReportID = SrcCrimeReport@ID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SlcCrimes",
+				"LftJnFctCrimes derive(RowInsertDate = currentDate(),",
+				"          RowUpdateDate = currentDate()) ~> DrMetadataColumns",
+				"SrcArrests, SrcRace join(SrcArrests@RACE == SrcRace@Race,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> InnJnRace",
+				"InnJnRace select(mapColumn(",
+				"          id = SrcArrests@id,",
+				"          CB_NO,",
+				"          CASE_NUMBER,",
+				"          ARREST_DATE,",
+				"          RaceID = SrcRace@ID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SlcArrests",
+				"SlcArrests, SlcFctArrests join(SlcArrests@CB_NO == SlcFctArrests@CB_No,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LftJnFctArrests",
+				"SrcFctArrests derive(Mdcol = md5(CaseNumber+toString(CB_No)+toString(ArrestDate)+toString(RaceID))) ~> DrArrestsMd",
+				"DrArrestsMd select(mapColumn(",
+				"          CB_No,",
+				"          Mdcol",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SlcFctArrests",
+				"LftJnFctArrests derive(Year = year(ARREST_DATE),",
+				"          RowInsertDate = currentDate(),",
+				"          RowUpdateDate = currentDate()) ~> DrYear",
+				"DrYear split(isNull(SlcFctArrests@CB_No),",
+				"     disjoint: false) ~> split2@(NewRcrds, ExstRcrds)",
+				"split2@ExstRcrds alterRow(updateIf(Mdcol==md5(CASE_NUMBER+toString(split2@ExstRcrds@CB_NO)+toString(ARREST_DATE)+toString(RaceID)))) ~> UpdRcrds",
+				"UpdRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['ID','CaseNumber'],",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ID = split1@ExistRcrds@id,",
+				"          CaseNumber = {CASE NUMBER},",
+				"          Date = DATE,",
+				"          Arrest,",
+				"          LocationDescription = {Location Description},",
+				"          DistrictID = District,",
+				"          Year,",
+				"          UpdatedOn = {Updated On},",
+				"          CrimeReportID,",
+				"          RowUpdateDate",
+				"     )) ~> UpdFctCrimes",
+				"split1@NwRcrds sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 2,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ID = split1@NwRcrds@id,",
+				"          CaseNumber = {CASE NUMBER},",
+				"          Date = DATE,",
+				"          Arrest,",
+				"          LocationDescription = {Location Description},",
+				"          DistrictID = District,",
+				"          Year,",
+				"          UpdatedOn = {Updated On},",
+				"          CrimeReportID,",
+				"          RowInsertDate,",
+				"          RowUpdateDate",
+				"     )) ~> InsFctCrimes",
+				"split2@NewRcrds sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 3,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ID = id,",
+				"          CB_No = split2@NewRcrds@CB_NO,",
+				"          CaseNumber = CASE_NUMBER,",
+				"          ArrestDate = ARREST_DATE,",
+				"          RaceID,",
+				"          Year,",
+				"          RowInsertDate,",
+				"          RowUpdateDate",
+				"     )) ~> InsFctArrests",
+				"UpdRcrds sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['CB_No'],",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 4,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ID = id,",
+				"          CB_No = split2@ExstRcrds@CB_NO,",
+				"          CaseNumber = CASE_NUMBER,",
+				"          ArrestDate = ARREST_DATE,",
+				"          RaceID,",
+				"          Year,",
+				"          RowInsertDate,",
+				"          RowUpdateDate",
+				"     )) ~> UpdFctArrests"
+			]
+		}
+	}
+}

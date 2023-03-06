@@ -1,0 +1,96 @@
+{
+	"name": "ArrestsJson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Arrests/Arrests_Incremental",
+				"fileSystem": "myfilesystem"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"cb_no": {
+					"type": "string"
+				},
+				"case_number": {
+					"type": "string"
+				},
+				"arrest_date": {
+					"type": "string"
+				},
+				"race": {
+					"type": "string"
+				},
+				"charge_1_statute": {
+					"type": "string"
+				},
+				"charge_1_description": {
+					"type": "string"
+				},
+				"charges_1_type": {
+					"type": "string"
+				},
+				"charge_1_class": {
+					"type": "string"
+				},
+				"charge_2_statute": {
+					"type": "string"
+				},
+				"charge_2_description": {
+					"type": "string"
+				},
+				"charges_2_type": {
+					"type": "string"
+				},
+				"charge_2_class": {
+					"type": "string"
+				},
+				"charge_3_statute": {
+					"type": "string"
+				},
+				"charge_3_description": {
+					"type": "string"
+				},
+				"charges_3_type": {
+					"type": "string"
+				},
+				"charge_3_class": {
+					"type": "string"
+				},
+				"charge_4_statute": {
+					"type": "string"
+				},
+				"charge_4_description": {
+					"type": "string"
+				},
+				"charges_4_type": {
+					"type": "string"
+				},
+				"charge_4_class": {
+					"type": "string"
+				},
+				"charges_statute": {
+					"type": "string"
+				},
+				"charges_description": {
+					"type": "string"
+				},
+				"charges_type": {
+					"type": "string"
+				},
+				"charges_class": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

@@ -1,0 +1,28 @@
+{
+	"name": "ArrestsFiles",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"LoadType": {
+				"type": "String",
+				"defaultValue": "History"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat('Arrests/Arrests_', dataset().LoadType)",
+					"type": "Expression"
+				},
+				"fileSystem": "myfilesystem"
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

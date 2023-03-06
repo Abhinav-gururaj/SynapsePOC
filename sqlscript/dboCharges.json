@@ -1,0 +1,17 @@
+{
+	"name": "dboCharges",
+	"properties": {
+		"content": {
+			"query": "DROP TABLE [dbo].[Charges]\nGO\n\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\n\nCREATE TABLE [dbo].[Charges]\n( \n\t[CB_No] [int]  NULL,\n\t[ChargeDetailID] [int]  NULL\n)\nWITH\n(\n\tDISTRIBUTION = HASH ( [ChargeDetailID] ),\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "default",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
