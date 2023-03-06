@@ -80,7 +80,7 @@
 					},
 					"staging": {
 						"linkedService": {
-							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
 						"folderPath": "myfilesystem/Staging"
@@ -89,8 +89,7 @@
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine",
-					"sourceStagingConcurrency": 1
+					"traceLevel": "Fine"
 				}
 			},
 			{
@@ -156,7 +155,7 @@
 					},
 					"staging": {
 						"linkedService": {
-							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
 						"folderPath": "myfilesystem/Staging"
@@ -165,8 +164,7 @@
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine",
-					"sourceStagingConcurrency": 1
+					"traceLevel": "Fine"
 				}
 			},
 			{
@@ -247,7 +245,7 @@
 					},
 					"staging": {
 						"linkedService": {
-							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
 						"folderPath": "myfilesystem/Staging"
@@ -256,8 +254,7 @@
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine",
-					"sourceStagingConcurrency": 1
+					"traceLevel": "Fine"
 				}
 			},
 			{
