@@ -47,7 +47,7 @@
 					"enableStaging": true,
 					"stagingSettings": {
 						"linkedServiceName": {
-							"referenceName": "synapsepoc1321-WorkspaceDefaultStorage",
+							"referenceName": "synapsepoc1230-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
 						"path": "myfilesystem/Staging"
