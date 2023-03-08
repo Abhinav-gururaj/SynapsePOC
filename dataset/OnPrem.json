@@ -1,0 +1,131 @@
+{
+	"name": "OnPrem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OnPrem",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Data Engineer Assignment Test Set.xlsx",
+				"folderPath": "SmartBridge",
+				"container": "mydatalakestorage"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "TRANSACTIONPARTITIONKEY",
+				"type": "String"
+			},
+			{
+				"name": "TRANSACTIONKEY",
+				"type": "String"
+			},
+			{
+				"name": "DAYPARTKEY",
+				"type": "String"
+			},
+			{
+				"name": "TRANSACTIONDATEKEY",
+				"type": "String"
+			},
+			{
+				"name": "BUSINESSDATEKEY",
+				"type": "String"
+			},
+			{
+				"name": "PROFITCENTERKEY",
+				"type": "String"
+			},
+			{
+				"name": "STOREKEY",
+				"type": "String"
+			},
+			{
+				"name": "STORESTATUSKEY",
+				"type": "String"
+			},
+			{
+				"name": "ORGANIZATIONKEY",
+				"type": "String"
+			},
+			{
+				"name": "PERIODICORGANIZATIONKEY",
+				"type": "String"
+			},
+			{
+				"name": "REGISTERKEY",
+				"type": "String"
+			},
+			{
+				"name": "PTXGUID",
+				"type": "String"
+			},
+			{
+				"name": "CHARGES",
+				"type": "String"
+			},
+			{
+				"name": "DEBIT",
+				"type": "String"
+			},
+			{
+				"name": "DISCOUNTS",
+				"type": "String"
+			},
+			{
+				"name": "TAXES",
+				"type": "String"
+			},
+			{
+				"name": "REMITTANCE",
+				"type": "String"
+			},
+			{
+				"name": "GUESTCOUNT",
+				"type": "String"
+			},
+			{
+				"name": "DRAWERKEY",
+				"type": "String"
+			},
+			{
+				"name": "DEBITAMT",
+				"type": "String"
+			},
+			{
+				"name": "REFUNDAMT",
+				"type": "String"
+			},
+			{
+				"name": "SSSCOUNT",
+				"type": "String"
+			},
+			{
+				"name": "STORESTATUS2KEY",
+				"type": "String"
+			},
+			{
+				"name": "PROFITCENTERKEY_ORIG",
+				"type": "String"
+			},
+			{
+				"name": "CATERINGKEY",
+				"type": "String"
+			},
+			{
+				"name": "MISCCHARGES",
+				"type": "String"
+			},
+			{
+				"name": "CREATEDTIME",
+				"type": "String"
+			}
+		]
+	}
+}

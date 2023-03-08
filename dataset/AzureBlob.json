@@ -1,0 +1,24 @@
+{
+	"name": "AzureBlob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OnPrem",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "SB",
+				"container": "mydatalakestorage"
+			},
+			"columnDelimiter": ",",
+			"rowDelimiter": "\n",
+			"escapeChar": "\"",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
