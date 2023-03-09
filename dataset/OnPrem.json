@@ -5,13 +5,20 @@
 			"referenceName": "OnPrem",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Sheet1",
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Data Engineer Assignment Test Set.xlsx",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
 				"folderPath": "SmartBridge",
 				"container": "mydatalakestorage"
 			},
