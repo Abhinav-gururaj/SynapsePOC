@@ -8,6 +8,9 @@
 		"parameters": {
 			"FileName": {
 				"type": "string"
+			},
+			"Sheet": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -22,7 +25,13 @@
 				"folderPath": "SmartBridge",
 				"container": "mydatalakestorage"
 			},
-			"firstRowAsHeader": true
+			"firstRowAsHeader": true,
+			"compression": {
+				"type": {
+					"value": "@dataset().Sheet",
+					"type": "Expression"
+				}
+			}
 		},
 		"schema": [
 			{
