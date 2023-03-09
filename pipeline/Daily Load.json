@@ -1064,7 +1064,43 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('declare @id int;select @id=id from dbo.Pipeline_Logging where pipeline_end_time is NULL;update dbo.Pipeline_Logging set pipeline_end_time=CURRENT_TIMESTAMP where id=@id')",
+								"value": "@concat('declare @id int;select @id=id from dbo.Pipeline_Logging where pipeline_end_time is NULL;update dbo.Pipeline_Logging set pipeline_end_time=CURRENT_TIMESTAMP, pipeline_run_status=''Completed'' where id=@id')",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Script5",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "If Condition1",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "synapsepoc1230-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('declare @id int;select @id=id from dbo.Pipeline_Logging where pipeline_end_time is NULL;update dbo.Pipeline_Logging set pipeline_end_time=CURRENT_TIMESTAMP, pipeline_run_status=''Pipeline Failed'' where id=@id')",
 								"type": "Expression"
 							}
 						}
