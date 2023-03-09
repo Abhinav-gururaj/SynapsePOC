@@ -390,16 +390,6 @@
 									"name": "MISCCHARGES",
 									"type": "String"
 								}
-							},
-							{
-								"source": {
-									"name": "CREATEDTIME\r",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CREATEDTIME\r",
-									"type": "String"
-								}
 							}
 						]
 					}
