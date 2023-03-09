@@ -433,7 +433,7 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "Script2",
+						"activity": "Lookup1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -459,7 +459,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('insert into [dbo].[Pipeline_Logging] values(''',activity('Script2').output.pipelineReturnValue,',''',pipeline().RunId,''',''Running'',',pipeline().TriggerTime,',NULL')",
+								"value": "@concat('declare @date datetime=CURRENT_TIMESTAMP;\n        declare @max_id int;\n        select @max_id=(coalesce(max(id),0)+1) from [dbo].[Pipeline_Logging];\ninsert into [dbo].[Pipeline_Logging] values(@max_id,''',pipeline().RunId,''',''Running'',@date,NULL)')",
 								"type": "Expression"
 							}
 						}
@@ -468,8 +468,8 @@
 				}
 			},
 			{
-				"name": "Script2",
-				"type": "Script",
+				"name": "Lookup1",
+				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -479,33 +479,36 @@
 					"secureInput": false
 				},
 				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "synapsepoc1230-WorkspaceDefaultSqlServer",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"DBName": "mydedicatedsqlpool"
-					}
-				},
 				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": {
-								"value": "@concat('select max(id) from [dbo].[Pipeline_Logging]')",
-								"type": "Expression"
-							}
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": {
+							"value": "@concat('select max(id) as id from [dbo].[Pipeline_Logging]')",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"DBName": "mydedicatedsqlpool",
+							"schema": "dbo",
+							"table": "Pipeline_Logging"
 						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
+					}
 				}
 			}
 		],
 		"parameters": {
 			"FileName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Data Engineer Assignment Test Set.xlsx"
 			},
 			"Sheet": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Sheet1"
 			}
 		},
 		"folder": {
