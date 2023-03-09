@@ -228,6 +228,354 @@
 								},
 								"translator": {
 									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "TRANSACTIONPARTITIONKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "TRANSACTIONPARTITIONKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "TRANSACTIONKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "TRANSACTIONKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "DAYPARTKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "DAYPARTKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "TRANSACTIONDATEKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "TRANSACTIONDATEKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "BUSINESSDATEKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "BUSINESSDATEKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "PROFITCENTERKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "PROFITCENTERKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "STOREKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "STOREKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "STORESTATUSKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "STORESTATUSKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "ORGANIZATIONKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "ORGANIZATIONKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "PERIODICORGANIZATIONKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "PERIODICORGANIZATIONKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "REGISTERKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "REGISTERKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "PTXGUID",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "PTXGUID",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "CHARGES",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "CHARGES",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "DEBIT",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "DEBIT",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "DISCOUNTS",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "DISCOUNTS",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "TAXES",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "TAXES",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "REMITTANCE",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "REMITTANCE",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "GUESTCOUNT",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "GUESTCOUNT",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "DRAWERKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "DRAWERKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "DEBITAMT",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "DEBITAMT",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "REFUNDAMT",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "REFUNDAMT",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "SSSCOUNT",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "SSSCOUNT",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "STORESTATUS2KEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "STORESTATUS2KEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "PROFITCENTERKEY_ORIG",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "PROFITCENTERKEY_ORIG",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "CATERINGKEY",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "CATERINGKEY",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "MISCCHARGES",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "MISCCHARGES",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "CREATEDTIME",
+												"type": "String",
+												"physicalType": "String"
+											},
+											"sink": {
+												"name": "CREATEDTIME",
+												"type": "String",
+												"physicalType": "nvarchar"
+											}
+										},
+										{
+											"source": {
+												"name": "ROWSTARTDATE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ROWSTARTDATE",
+												"type": "DateTime",
+												"physicalType": "datetime"
+											}
+										},
+										{
+											"source": {
+												"name": "ROWEXPIRATIONDATE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ROWEXPIRATIONDATE",
+												"type": "DateTime",
+												"physicalType": "datetime"
+											}
+										}
+									],
 									"typeConversion": true,
 									"typeConversionSettings": {
 										"allowDataTruncation": true,
