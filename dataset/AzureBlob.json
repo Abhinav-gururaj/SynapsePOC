@@ -5,11 +5,20 @@
 			"referenceName": "OnPrem",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
 				"folderPath": "SB",
 				"container": "mydatalakestorage"
 			},
