@@ -82,343 +82,6 @@
 				]
 			},
 			{
-				"name": "Copy data1",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "File transfer",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
-							"wildcardFolderPath": "SB",
-							"wildcardFileName": "*",
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"sink": {
-						"type": "SqlDWSink",
-						"allowCopyCommand": true,
-						"tableOption": "autoCreate",
-						"disableMetricsCollection": false
-					},
-					"enableStaging": true,
-					"stagingSettings": {
-						"linkedServiceName": {
-							"referenceName": "OnPrem",
-							"type": "LinkedServiceReference"
-						},
-						"path": "mydatalakestorage/SB"
-					},
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "TRANSACTIONPARTITIONKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "TRANSACTIONPARTITIONKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "TRANSACTIONKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "TRANSACTIONKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "DAYPARTKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "DAYPARTKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "TRANSACTIONDATEKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "TRANSACTIONDATEKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "BUSINESSDATEKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "BUSINESSDATEKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PROFITCENTERKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PROFITCENTERKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "STOREKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "STOREKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "STORESTATUSKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "STORESTATUSKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "ORGANIZATIONKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ORGANIZATIONKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PERIODICORGANIZATIONKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PERIODICORGANIZATIONKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "REGISTERKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "REGISTERKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PTXGUID",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PTXGUID",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "CHARGES",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CHARGES",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "DEBIT",
-									"type": "String"
-								},
-								"sink": {
-									"name": "DEBIT",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "DISCOUNTS",
-									"type": "String"
-								},
-								"sink": {
-									"name": "DISCOUNTS",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "TAXES",
-									"type": "String"
-								},
-								"sink": {
-									"name": "TAXES",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "REMITTANCE",
-									"type": "String"
-								},
-								"sink": {
-									"name": "REMITTANCE",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "GUESTCOUNT",
-									"type": "String"
-								},
-								"sink": {
-									"name": "GUESTCOUNT",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "DRAWERKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "DRAWERKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "DEBITAMT",
-									"type": "String"
-								},
-								"sink": {
-									"name": "DEBITAMT",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "REFUNDAMT",
-									"type": "String"
-								},
-								"sink": {
-									"name": "REFUNDAMT",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SSSCOUNT",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SSSCOUNT",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "STORESTATUS2KEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "STORESTATUS2KEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PROFITCENTERKEY_ORIG",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PROFITCENTERKEY_ORIG",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "CATERINGKEY",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CATERINGKEY",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "MISCCHARGES",
-									"type": "String"
-								},
-								"sink": {
-									"name": "MISCCHARGES",
-									"type": "String"
-								}
-							}
-						]
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "AzureBlob",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileName": {
-								"value": "@concat(pipeline().parameters.FileName,'.txt')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "AzureSynapseAnalyticsTable",
-						"type": "DatasetReference",
-						"parameters": {
-							"DBName": "mydedicatedsqlpool",
-							"schema": "dbo",
-							"table": "assignment"
-						}
-					}
-				]
-			},
-			{
 				"name": "Script1",
 				"type": "Script",
 				"dependsOn": [
@@ -473,7 +136,7 @@
 					"source": {
 						"type": "SqlDWSource",
 						"sqlReaderQuery": {
-							"value": "@concat('select max(id) as id from [dbo].[Pipeline_Logging]')",
+							"value": "@concat('select coalesce(max(pipeline_end_time),''NULL'') as LastRunTime from [dbo].[Pipeline_Logging]')",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -488,6 +151,403 @@
 							"table": "Pipeline_Logging"
 						}
 					}
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "File transfer",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('Lookup1').output.firstRow.LastRunTime,'NULL')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy data1_1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"additionalColumns": [
+										{
+											"name": "ROWSTARTDATE",
+											"value": {
+												"value": "@utcnow()",
+												"type": "Expression"
+											}
+										},
+										{
+											"name": "ROWEXPIRATIONDATE",
+											"value": {
+												"value": "NULL",
+												"type": "Expression"
+											}
+										}
+									],
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"wildcardFolderPath": "SB",
+										"wildcardFileName": "*",
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "SqlDWSink",
+									"allowCopyCommand": true,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
+										"referenceName": "OnPrem",
+										"type": "LinkedServiceReference"
+									},
+									"path": "mydatalakestorage/SB"
+								},
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "TRANSACTIONPARTITIONKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TRANSACTIONPARTITIONKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TRANSACTIONKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TRANSACTIONKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DAYPARTKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DAYPARTKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TRANSACTIONDATEKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TRANSACTIONDATEKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "BUSINESSDATEKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "BUSINESSDATEKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "PROFITCENTERKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PROFITCENTERKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "STOREKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "STOREKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "STORESTATUSKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "STORESTATUSKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "ORGANIZATIONKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ORGANIZATIONKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "PERIODICORGANIZATIONKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PERIODICORGANIZATIONKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "REGISTERKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "REGISTERKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "PTXGUID",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PTXGUID",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CHARGES",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CHARGES",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DEBIT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DEBIT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DISCOUNTS",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DISCOUNTS",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TAXES",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TAXES",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "REMITTANCE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "REMITTANCE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "GUESTCOUNT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "GUESTCOUNT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DRAWERKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DRAWERKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DEBITAMT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DEBITAMT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "REFUNDAMT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "REFUNDAMT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SSSCOUNT",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SSSCOUNT",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "STORESTATUS2KEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "STORESTATUS2KEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "PROFITCENTERKEY_ORIG",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PROFITCENTERKEY_ORIG",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CATERINGKEY",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CATERINGKEY",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "MISCCHARGES",
+												"type": "String"
+											},
+											"sink": {
+												"name": "MISCCHARGES",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CREATEDTIME",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CREATEDTIME",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "ROWSTARTDATE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ROWSTARTDATE",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "ROWEXPIRATIONDATE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ROWEXPIRATIONDATE",
+												"type": "DateTime"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "AzureBlob",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@concat(pipeline().parameters.FileName,'.txt')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AzureSynapseAnalyticsTable",
+									"type": "DatasetReference",
+									"parameters": {
+										"DBName": "mydedicatedsqlpool",
+										"schema": "dbo",
+										"table": "assignment"
+									}
+								}
+							]
+						}
+					]
 				}
 			}
 		],
