@@ -466,7 +466,7 @@
 		"parameters": {
 			"LoadType": {
 				"type": "string",
-				"defaultValue": "History"
+				"defaultValue": "Incremental"
 			}
 		},
 		"folder": {
