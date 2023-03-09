@@ -174,7 +174,14 @@
 						{
 							"name": "Copy data1_1_copy1",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Script2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -185,34 +192,17 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "DelimitedTextSource",
-									"additionalColumns": [
-										{
-											"name": "ROWSTARTDATE",
-											"value": {
-												"value": "@formatDateTime(utcNow())",
-												"type": "Expression"
-											}
-										}
-									],
-									"storeSettings": {
-										"type": "AzureBlobStorageReadSettings",
-										"recursive": true,
-										"wildcardFolderPath": "SB",
-										"wildcardFileName": "*",
-										"enablePartitionDiscovery": false
-									},
-									"formatSettings": {
-										"type": "DelimitedTextReadSettings"
-									}
+									"type": "SqlDWSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
 								},
 								"sink": {
 									"type": "SqlDWSink",
-									"writeBehavior": "Upsert",
-									"upsertSettings": {
-										"keys": [
-											""
-										]
+									"allowPolyBase": true,
+									"polyBaseSettings": {
+										"rejectValue": 0,
+										"rejectType": "value",
+										"useTypeDefault": true
 									},
 									"disableMetricsCollection": false
 								},
@@ -230,325 +220,271 @@
 										{
 											"source": {
 												"name": "TRANSACTIONPARTITIONKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "TRANSACTIONPARTITIONKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "TRANSACTIONKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "TRANSACTIONKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "DAYPARTKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "DAYPARTKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "TRANSACTIONDATEKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "TRANSACTIONDATEKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "BUSINESSDATEKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "BUSINESSDATEKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "PROFITCENTERKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "PROFITCENTERKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "STOREKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "STOREKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "STORESTATUSKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "STORESTATUSKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "ORGANIZATIONKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "ORGANIZATIONKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "PERIODICORGANIZATIONKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "PERIODICORGANIZATIONKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "REGISTERKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "REGISTERKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "PTXGUID",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "PTXGUID",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "CHARGES",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "CHARGES",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "DEBIT",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "DEBIT",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "DISCOUNTS",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "DISCOUNTS",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "TAXES",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "TAXES",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "REMITTANCE",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "REMITTANCE",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "GUESTCOUNT",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "GUESTCOUNT",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "DRAWERKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "DRAWERKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "DEBITAMT",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "DEBITAMT",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "REFUNDAMT",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "REFUNDAMT",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "SSSCOUNT",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "SSSCOUNT",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "STORESTATUS2KEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "STORESTATUS2KEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "PROFITCENTERKEY_ORIG",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "PROFITCENTERKEY_ORIG",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "CATERINGKEY",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "CATERINGKEY",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "MISCCHARGES",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "MISCCHARGES",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
 											"source": {
 												"name": "CREATEDTIME",
-												"type": "String",
-												"physicalType": "String"
+												"type": "String"
 											},
 											"sink": {
 												"name": "CREATEDTIME",
-												"type": "String",
-												"physicalType": "nvarchar"
+												"type": "String"
 											}
 										},
 										{
@@ -558,27 +494,30 @@
 											},
 											"sink": {
 												"name": "ROWSTARTDATE",
-												"type": "DateTime",
-												"physicalType": "datetime"
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "ROWEXPIRATIONDATE",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "ROWEXPIRATIONDATE",
+												"type": "DateTime"
 											}
 										}
-									],
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
+									]
 								}
 							},
 							"inputs": [
 								{
-									"referenceName": "AzureBlob",
+									"referenceName": "AzureSynapseAnalyticsTable",
 									"type": "DatasetReference",
 									"parameters": {
-										"FileName": {
-											"value": "@concat(pipeline().parameters.FileName,'.txt')",
-											"type": "Expression"
-										}
+										"DBName": "mydedicatedsqlpool",
+										"schema": "dbo",
+										"table": "assignment_temp"
 									}
 								}
 							],
@@ -616,6 +555,21 @@
 												"value": "@concat(pipeline().parameters.FileName,'.txt')",
 												"type": "Expression"
 											}
+										},
+										"source2": {
+											"DBName": "mydedicatedsqlpool",
+											"schema": "dbo",
+											"table": "assignment"
+										},
+										"sink1": {
+											"DBName": "mydedicatedsqlpool",
+											"schema": "dbo",
+											"table": "assignment"
+										},
+										"sink2": {
+											"DBName": "mydedicatedsqlpool",
+											"schema": "dbo",
+											"table": "assignment_temp"
 										}
 									}
 								},
@@ -624,6 +578,84 @@
 									"computeType": "General"
 								},
 								"traceLevel": "Fine"
+							}
+						},
+						{
+							"name": "Script2",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "Data flow1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "synapsepoc1230-WorkspaceDefaultSqlServer",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"DBName": "mydedicatedsqlpool"
+								}
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat('update assignment asn set ROWEXPIRATIONDATE=CURRENT_TIMESTAMP left join assignment_temp tmp on asn.PTXGUID=tmp.PTXGUID')",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "Script4",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "Copy data1_1_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "synapsepoc1230-WorkspaceDefaultSqlServer",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"DBName": "mydedicatedsqlpool"
+								}
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat('truncate table assignment_temp')",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
 							}
 						}
 					],
@@ -992,6 +1024,45 @@
 							]
 						}
 					]
+				}
+			},
+			{
+				"name": "Script3",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "If Condition1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "synapsepoc1230-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "mydedicatedsqlpool"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('declare @id int;select @id=id from dbo.Pipeline_Logging where pipeline_end_time is NULL;update dbo.Pipeline_Logging set pipeline_end_time=CURRENT_TIMESTAMP where id=@id')",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],

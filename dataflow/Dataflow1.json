@@ -13,16 +13,34 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "AzureBlob",
+						"referenceName": "AzureSynapseAnalyticsTable",
 						"type": "DatasetReference"
 					},
 					"name": "source2"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
 			"transformations": [
 				{
 					"name": "join1"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -58,14 +76,104 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          TRANSACTIONPARTITIONKEY as string,",
+				"          TRANSACTIONKEY as string,",
+				"          DAYPARTKEY as string,",
+				"          TRANSACTIONDATEKEY as string,",
+				"          BUSINESSDATEKEY as string,",
+				"          PROFITCENTERKEY as string,",
+				"          STOREKEY as string,",
+				"          STORESTATUSKEY as string,",
+				"          ORGANIZATIONKEY as string,",
+				"          PERIODICORGANIZATIONKEY as string,",
+				"          REGISTERKEY as string,",
+				"          PTXGUID as string,",
+				"          CHARGES as string,",
+				"          DEBIT as string,",
+				"          DISCOUNTS as string,",
+				"          TAXES as string,",
+				"          REMITTANCE as string,",
+				"          GUESTCOUNT as string,",
+				"          DRAWERKEY as string,",
+				"          DEBITAMT as string,",
+				"          REFUNDAMT as string,",
+				"          SSSCOUNT as string,",
+				"          STORESTATUS2KEY as string,",
+				"          PROFITCENTERKEY_ORIG as string,",
+				"          CATERINGKEY as string,",
+				"          MISCCHARGES as string,",
+				"          CREATEDTIME as string,",
+				"          ROWSTARTDATE as string,",
+				"          ROWEXPIRATIONDATE as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source2",
-				"source2, source1 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> source2",
+				"source2, source1 join(source2@PTXGUID == source1@PTXGUID,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1"
+				"     broadcast: 'auto')~> join1",
+				"join1 split(isNull(source1@PTXGUID),",
+				"     disjoint: false) ~> split1@(insert, update)",
+				"split1@insert sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+				"split1@update sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          TRANSACTIONPARTITIONKEY = split1@update@TRANSACTIONPARTITIONKEY,",
+				"          TRANSACTIONKEY = split1@update@TRANSACTIONKEY,",
+				"          DAYPARTKEY = split1@update@DAYPARTKEY,",
+				"          TRANSACTIONDATEKEY = split1@update@TRANSACTIONDATEKEY,",
+				"          BUSINESSDATEKEY = split1@update@BUSINESSDATEKEY,",
+				"          PROFITCENTERKEY = split1@update@PROFITCENTERKEY,",
+				"          STOREKEY = split1@update@STOREKEY,",
+				"          STORESTATUSKEY = split1@update@STORESTATUSKEY,",
+				"          ORGANIZATIONKEY = split1@update@ORGANIZATIONKEY,",
+				"          PERIODICORGANIZATIONKEY = split1@update@PERIODICORGANIZATIONKEY,",
+				"          REGISTERKEY = split1@update@REGISTERKEY,",
+				"          PTXGUID = split1@update@PTXGUID,",
+				"          CHARGES = split1@update@CHARGES,",
+				"          DEBIT = split1@update@DEBIT,",
+				"          DISCOUNTS = split1@update@DISCOUNTS,",
+				"          TAXES = split1@update@TAXES,",
+				"          REMITTANCE = split1@update@REMITTANCE,",
+				"          GUESTCOUNT = split1@update@GUESTCOUNT,",
+				"          DRAWERKEY = split1@update@DRAWERKEY,",
+				"          DEBITAMT = split1@update@DEBITAMT,",
+				"          REFUNDAMT = split1@update@REFUNDAMT,",
+				"          SSSCOUNT = split1@update@SSSCOUNT,",
+				"          STORESTATUS2KEY = split1@update@STORESTATUS2KEY,",
+				"          PROFITCENTERKEY_ORIG = split1@update@PROFITCENTERKEY_ORIG,",
+				"          CATERINGKEY = split1@update@CATERINGKEY,",
+				"          MISCCHARGES = split1@update@MISCCHARGES,",
+				"          CREATEDTIME = split1@update@CREATEDTIME,",
+				"          ROWSTARTDATE,",
+				"          ROWEXPIRATIONDATE",
+				"     )) ~> sink2"
 			]
 		}
 	}
