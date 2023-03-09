@@ -1,0 +1,72 @@
+{
+	"name": "Dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureBlob",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureBlob",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "join1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          TRANSACTIONPARTITIONKEY as integer,",
+				"          TRANSACTIONKEY as long,",
+				"          DAYPARTKEY as short,",
+				"          TRANSACTIONDATEKEY as date,",
+				"          BUSINESSDATEKEY as date,",
+				"          PROFITCENTERKEY as short,",
+				"          STOREKEY as short,",
+				"          STORESTATUSKEY as string,",
+				"          ORGANIZATIONKEY as integer,",
+				"          PERIODICORGANIZATIONKEY as integer,",
+				"          REGISTERKEY as short,",
+				"          PTXGUID as string,",
+				"          CHARGES as double,",
+				"          DEBIT as boolean,",
+				"          DISCOUNTS as double,",
+				"          TAXES as double,",
+				"          REMITTANCE as double,",
+				"          GUESTCOUNT as short,",
+				"          DRAWERKEY as boolean,",
+				"          DEBITAMT as string,",
+				"          REFUNDAMT as string,",
+				"          SSSCOUNT as boolean,",
+				"          STORESTATUS2KEY as short,",
+				"          PROFITCENTERKEY_ORIG as short,",
+				"          CATERINGKEY as short,",
+				"          MISCCHARGES as boolean,",
+				"          CREATEDTIME as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source2",
+				"source2, source1 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1"
+			]
+		}
+	}
+}
