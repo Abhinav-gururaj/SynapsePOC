@@ -167,7 +167,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('Lookup1').output.firstRow.LastRunTime,'1900-01-01')",
+						"value": "@equals(activity('Lookup1').output.firstRow.LastRunTime,'1900-01-01T00:00:00Z')",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
