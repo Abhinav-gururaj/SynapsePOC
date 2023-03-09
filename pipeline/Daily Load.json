@@ -573,6 +573,13 @@
 										}
 									}
 								},
+								"staging": {
+									"linkedService": {
+										"referenceName": "OnPrem",
+										"type": "LinkedServiceReference"
+									},
+									"folderPath": "mydatalakestorage/SB"
+								},
 								"compute": {
 									"coreCount": 8,
 									"computeType": "General"
