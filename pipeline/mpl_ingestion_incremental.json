@@ -40,7 +40,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "pl_Load_crimes_stage",
+						"activity": "pl_Load_Arrests_stage",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -70,6 +70,29 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "Crimes",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"LoadType": "Incremental"
+					}
+				}
+			},
+			{
+				"name": "pl_Load_Arrests_stage",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "pl_Load_crimes_stage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Arrests",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true,
