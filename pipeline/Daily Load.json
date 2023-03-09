@@ -136,7 +136,7 @@
 					"source": {
 						"type": "SqlDWSource",
 						"sqlReaderQuery": {
-							"value": "@concat('select coalesce(max(pipeline_end_time),''NULL'') as LastRunTime from [dbo].[Pipeline_Logging]')",
+							"value": "@concat('select coalesce(max(pipeline_end_time),''1900-01-01'') as LastRunTime from [dbo].[Pipeline_Logging]')",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -167,7 +167,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('Lookup1').output.firstRow.LastRunTime,'NULL')",
+						"value": "@equals(activity('Lookup1').output.firstRow.LastRunTime,'1900-01-01')",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -215,7 +215,7 @@
 								},
 								"sink": {
 									"type": "SqlDWSink",
-									"allowCopyCommand": true,
+									"writeBehavior": "Insert",
 									"tableOption": "autoCreate",
 									"disableMetricsCollection": false
 								},
@@ -520,7 +520,12 @@
 												"type": "DateTime"
 											}
 										}
-									]
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
 								}
 							},
 							"inputs": [
